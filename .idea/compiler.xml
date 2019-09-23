@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="algorithm_and_datastructure" />
+        <module name="other_simple_test" />
+        <module name="spring_built_by_yogurt" />
+        <module name="spring_in_action" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
