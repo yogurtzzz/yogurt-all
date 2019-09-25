@@ -4,25 +4,25 @@ import niceFood.Food;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import sound.CDConfig;
-import sound.CDPlayer;
+import restaurant.YogurtRestaurant;
+
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = CDConfig.class)
+@ContextConfiguration(classes = YogurtRestaurant.class)
 public class SpringTest {
 
     @Autowired
-    private CDPlayer cdPlayer;
-
-    @Autowired(required = false)
+    @Qualifier("healthy")
     private Food food;
 
     @Test
-    public void play(){
-        cdPlayer.play();
-        System.out.println(cdPlayer.getName());
+    public void dining(){
+        assertNotNull(food);
         System.out.println(food.getName());
     }
 }

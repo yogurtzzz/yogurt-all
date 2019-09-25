@@ -17,7 +17,7 @@
     http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
     ">
 
-    <bean id="cd" class="restaurant.JayCD"/>
+    <bean id="cd" class="sound.JayCD"/>
     <bean id="food" class="niceFood.Sandwitch"/>
-    <bean class="restaurant.JayCDPlayer" p:cd-ref="cd" p:food-ref="food" p:price="10"/>
+    <bean class="sound.JayCDPlayer" p:cd-ref="cd" p:food-ref="food" p:price="10"/>
 </beans>
