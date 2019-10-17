@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <beans
-        profile="dev"
         xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:utils="http://www.springframework.org/schema/util"
+        xmlns:util="http://www.springframework.org/schema/util"
         xmlns:c="http://www.springframework.org/schema/c"
         xmlns:p="http://www.springframework.org/schema/p"
         xmlns:context="http://www.springframework.org/schema/context"
@@ -15,9 +14,33 @@
     http://www.springframework.org/schema/context/spring-context-4.0.xsd
     http://www.springframework.org/schema/aop
     http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+    http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util-4.0.xsd
     ">
 
-    <bean id="cd" class="restaurant.JayCD"/>
-    <bean id="food" class="niceFood.Sandwitch"/>
-    <bean class="restaurant.JayCDPlayer" p:cd-ref="cd" p:food-ref="food" p:price="10"/>
+    <context:property-placeholder location="classpath:properties/env.properties"/>
+    <bean id="sand" class="niceFood.Sandwitch"/>
+    <util:list id="songList">
+        <value>不能说的秘密</value>
+        <value>简单爱</value>
+        <value>晴天</value>
+        <value>发如雪</value>
+        <value>彩虹</value>
+        <value>告白气球</value>
+    </util:list>
+    <util:list id="students">
+        <bean class="niceFood.Student" p:name="yogurt1" p:score="60"/>
+        <bean class="niceFood.Student" p:name="yogurt2" p:score="59"/>
+        <bean class="niceFood.Student" p:name="yogurt3" p:score="78"/>
+        <bean class="niceFood.Student" p:name="yogurt4" p:score="83"/>
+        <bean class="niceFood.Student" p:name="yogurt5" p:score="22"/>
+    </util:list>
+    <bean id="studentHolder" class="niceFood.StudentHolder" p:students="#{students.^[score > 60]}"/>
+    <bean id="songs" class="niceFood.Songs" p:list-ref="songList"/>
+    <bean id="cd" class="niceFood.Hamburger" c:_0-ref="sand" c:_1="#{songs.list[T(Math).random() * songs.list.size()]}">
+    </bean>
+    <!--<bean id="aop" class="niceFood.BeanAOP" scope="session">-->
+        <!--&lt;!&ndash; 使用基于接口的代理 &ndash;&gt;-->
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    <!--</bean>-->
 </beans>
