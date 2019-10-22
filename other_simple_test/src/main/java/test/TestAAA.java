@@ -16,8 +16,6 @@ public class TestAAA {
     }
     @Test
     public void tes2(){
-        ArrayList a = new ArrayList();
-        AC b = new AC();
     }
 
     public static void main(String[] args) {
