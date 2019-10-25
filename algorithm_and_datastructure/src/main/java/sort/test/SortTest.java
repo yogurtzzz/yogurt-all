@@ -1,20 +1,44 @@
 package sort.test;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 import sort.core.Sort;
 import sort.core.TimingSort;
+import sort.exception.IllegalSortResultException;
 import sort.impl.basedOnInsertion.DirectInsertSort;
 import sort.impl.basedOnInsertion.ShellSort;
 import sort.impl.basedOnSelection.SimpleSelectSort;
 import sort.impl.basedOnSwap.BubbleSort;
+import sort.impl.basedOnSwap.QuickSort;
 import sort.impl.other.HeapSort;
+import sort.impl.other.MergeSort;
+import sort.impl.other.RadixSort;
+import utils.YogurtArrays;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * 在数据量较大情况下，测试表明
- * 性能 shellSort ≈ heapSort > selectSort ≈ insertSort > bubbleSort
- * 希尔排序 ≈ 堆排序 > 简单选择排序 ≈ 直接插入排序 > 冒泡排序
+ * 性能如下
+ * quickSort > mergeSort > heapSort > shellSort > insertSort > selectSort > bubbleSort
+ * 快速排序 > 归并排序 > 堆排序 > 希尔排序  > 直接插入排序 > 简单选择排序 > 冒泡排序
+ * 前4个总体最快，在输入数组不同的情况下表现有些微不同
+ */
+
+/**
+ * Junit执行
+ * @Before：初始化方法 对于每一个测试方法都要执行一次（注意与BeforeClass区别，后者是对于所有方法执行一次）
+ * @After：释放资源 对于每一个测试方法都要执行一次（注意与AfterClass区别，后者是对于所有方法执行一次）
+ * @Test：测试方法，在这里可以测试期望异常和超时时间
+ * @Test(expected=ArithmeticException.class)检查被测方法是否抛出ArithmeticException异常
+ * @Ignore：忽略的测试方法
+ * @BeforeClass：针对所有测试，只执行一次，且必须为static void
+ * @AfterClass：针对所有测试，只执行一次，且必须为static void
+ * 一个JUnit4的单元测试用例执行顺序为：
+ * @BeforeClass -> @Before -> @Test -> @After -> @AfterClass;
+ * 每一个测试方法的调用顺序为：
+ * @Before -> @Test -> @After;
  */
 public class SortTest {
 
@@ -27,13 +51,12 @@ public class SortTest {
         dataToTest = new ArrayList<>();
         int[] a1 = randomArr(1,2,0);
         int[] a2 = randomArr(1,2,1);
-        int[] a3 = randomArr(0,200000,20000);
+        int[] a3 = randomArr(-10000,20000,10000);
         int[] a4 = randomArr(-500,2000,1500);
 //        dataToTest.add(a1);
 //        dataToTest.add(a2);
         dataToTest.add(a3);
 //        dataToTest.add(a4);
-//        System.out.println("初始状态 : ");
         showInitArray();
     }
 
@@ -47,6 +70,8 @@ public class SortTest {
     private ArrayList<int[]> completelyDeepCopy(ArrayList<int[]> src){
         ArrayList<int[]> result = new ArrayList<>();
         for (int[] item : src){
+            //这里数组拷贝可以用Arrays.copyOf替换
+            //int[] newArray = Arrays.copyOf(item,item.length);
             int size = item.length;
             int[] newItem = new int[size];
             for (int i = 0; i < size; i++){
@@ -73,15 +98,10 @@ public class SortTest {
         return arr;
     }
 
+    //批量排序
     private void batchSort(Sort sortUtil){
         for (int[] arr : dataForEachTest){
             sortUtil.sort(arr);
-        }
-    }
-    //会计算耗时
-    private void batchTimingSort(TimingSort timingSort){
-        for (int[] arr : dataForEachTest){
-            timingSort.sort(arr);
         }
     }
     private static void showInitArray(){
@@ -89,62 +109,73 @@ public class SortTest {
         int i = 1;
         for (int[] a : dataToTest){
             System.out.print("array" + (i++) + " : ");
-            for (int ai : a)
-                System.out.print(ai + " ");
-            System.out.println();
+            YogurtArrays.showArrays(a);
         }
         System.out.println("===================================================");
     }
     private void showResult(){
-        System.out.println("===================================================");
-        String arr = "array";
         int i = 1;
         for (int[] a : dataForEachTest){
             System.out.print("array" + (i++) + " : ");
-            for (int ai : a)
-                System.out.print(ai + " ");
-            System.out.println();
+            YogurtArrays.showArrays(a);
         }
         System.out.println("===================================================");
     }
 
+    private void checkSortResult(){
+        for (int[] arr : dataForEachTest){
+            for (int i = 0;i < arr.length; i++){
+                if (i != arr.length - 1){
+                    if (arr[i] > arr[i + 1])
+                        throw new IllegalSortResultException("排序结果不正确");
+                }
+            }
+        }
+    }
+    private void commonTest(TimingSort sort){
+        //20个宽度，左对齐
+        System.out.printf("%-20s","#" + sort.getClass().getSimpleName() +"# ");
+        batchSort(sort);
+        checkSortResult();
+        //showResult();
+    }
     @Test
     public void testBubbleSort(){
-        TimingSort bubbleSort = new BubbleSort();
-        System.out.println("#Bubble Sort#");
-        batchTimingSort(bubbleSort);
-        showResult();
+        commonTest(new BubbleSort());
     }
 
     @Test
     public void testShellSort(){
-        System.out.println("#Shell Sort#");
-        TimingSort shellSort = new ShellSort();
-        batchTimingSort(shellSort);
-        showResult();
+        commonTest(new ShellSort());
     }
+
     @Test
     public void testInsertSort(){
-        TimingSort insertSort = new DirectInsertSort();
-        System.out.println("#Direct Insert Sort#");
-        batchTimingSort(insertSort);
-        showResult();
+        commonTest(new DirectInsertSort());
     }
 
     @Test
     public void testSimpleSelectSort(){
-        TimingSort simpleSelectSort = new SimpleSelectSort();
-        System.out.println("#Simple Select Sort#");
-        batchTimingSort(simpleSelectSort);
-        showResult();
+        commonTest(new SimpleSelectSort());
     }
 
     @Test
     public void testHeapSort(){
-        TimingSort heapSort = new HeapSort();
-        System.out.println("#Heap Sort#");
-        batchTimingSort(heapSort);
-        showResult();
+        commonTest(new HeapSort());
     }
 
+    @Test
+    public void testQuickSort(){
+        commonTest(new QuickSort());
+    }
+
+    @Test
+    public void testMergeSort(){
+        commonTest(new MergeSort());
+    }
+
+    @Test
+    public void testRadixSort(){
+        commonTest(new RadixSort());
+    }
 }

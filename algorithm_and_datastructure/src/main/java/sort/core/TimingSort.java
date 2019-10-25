@@ -6,6 +6,6 @@ public abstract class TimingSort extends AbstractSort {
         long start = System.nanoTime();
         this.doSort(arr);
         long end = System.nanoTime();
-        System.out.println("Sort completed with time elapsed : " + (end - start)/1000 + " us");
+        System.out.println((end - start)/1000 + " us");
     }
 }
