@@ -1,0 +1,65 @@
+package magical;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class KnuthShuffle {
+    public static void shuffle(int[] arr){
+        for (int i = arr.length - 1; i >= 0; i--){
+            int rand = (int)(Math.random() * (i + 1));
+            swap(arr,i,rand);
+        }
+    }
+
+    private static void swap(int[] arr,int i,int j){
+        if (i == j)
+            return;
+        int size = arr.length;
+        if (i >= size || j >= size || i < 0 || j < 0)
+            throw new IndexOutOfBoundsException("i = " + i + ",j = " + j + ",but size = " +size);
+        arr[i] = arr[i] ^ arr[j];
+        arr[j] = arr[i] ^ arr[j];
+        arr[i] = arr[i] ^ arr[j];
+    }
+
+    private static class Bucket{
+        private int[] bucket = new int[6];
+        public int[] getBucket(){
+            return this.bucket;
+        }
+    }
+    public static void main(String[] args) {
+        Map<Integer,Bucket> countMap = new HashMap<>();
+        int[] sum = new int[6];
+        countMap.put(0,new Bucket());
+        countMap.put(1,new Bucket());
+        countMap.put(2,new Bucket());
+        countMap.put(3,new Bucket());
+        countMap.put(4,new Bucket());
+        //在某一位置出现的，数字以及对应的次数
+        int n = 100000;
+        for (int i = 0;i < n; i++){
+            int[] arr = {1,2,3,4,5};
+            shuffle(arr);
+            countMap.get(0).getBucket()[arr[0]]++;
+            countMap.get(1).getBucket()[arr[1]]++;
+            countMap.get(2).getBucket()[arr[2]]++;
+            countMap.get(3).getBucket()[arr[3]]++;
+            countMap.get(4).getBucket()[arr[4]]++;
+        }
+
+        sum[0] = countMap.get(0).getBucket()[1] + countMap.get(0).getBucket()[2] + countMap.get(0).getBucket()[3] + countMap.get(0).getBucket()[4] + countMap.get(0).getBucket()[5];
+        sum[1] = countMap.get(1).getBucket()[1] + countMap.get(1).getBucket()[2] + countMap.get(1).getBucket()[3] + countMap.get(1).getBucket()[4] + countMap.get(1).getBucket()[5];
+        sum[2] = countMap.get(2).getBucket()[1] + countMap.get(2).getBucket()[2] + countMap.get(2).getBucket()[3] + countMap.get(2).getBucket()[4] + countMap.get(2).getBucket()[5];
+        sum[3] = countMap.get(3).getBucket()[1] + countMap.get(3).getBucket()[2] + countMap.get(3).getBucket()[3] + countMap.get(3).getBucket()[4] + countMap.get(3).getBucket()[5];
+        sum[4] = countMap.get(4).getBucket()[1] + countMap.get(4).getBucket()[2] + countMap.get(4).getBucket()[3] + countMap.get(4).getBucket()[4] + countMap.get(4).getBucket()[5];
+        for (int i = 0; i < 5; i++){
+            System.out.println("位置 " + i);
+            System.out.printf("1出现的概率：%.3f\n", (double)countMap.get(i).getBucket()[1] / sum[i]);
+            System.out.printf("2出现的概率：%.3f\n" ,(double)countMap.get(i).getBucket()[2] / sum[i]);
+            System.out.printf("3出现的概率：%.3f\n" ,(double)countMap.get(i).getBucket()[3] / sum[i]);
+            System.out.printf("4出现的概率：%.3f\n" ,(double)countMap.get(i).getBucket()[4] / sum[i]);
+            System.out.printf("5出现的概率：%.3f\n" ,(double)countMap.get(i).getBucket()[5] / sum[i]);
+        }
+    }
+}
