@@ -1,0 +1,122 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+html,body{
+    height:100%;
+}
+body{
+    background: #EDE574;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #E1F5C4, #EDE574);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #E1F5C4, #EDE574); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+#top_guide{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 60px;
+    width: 100%;
+    background: rgba(255,255,255,0.5);
+}
+ul#main_guide{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    list-style: none;
+    text-align: center;
+}
+ul#main_guide li{
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 100%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    animation: smaller 1s both;
+}
+ul#main_guide li:not(:last-child){
+    margin-right: 100px;
+}
+ul#main_guide li:hover{
+    animation: bigger 1s both;
+}
+@keyframes bigger {
+    0%{
+        transform: scale(1);
+    }
+    100%{
+        transform: scale(1.5);
+    }
+}
+@keyframes smaller {
+    0%{
+        transform: scale(1.5);
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+ul#main_guide li img{
+    width: 60%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+}
+#user{
+    display: flex;
+    align-items: center;
+    position:absolute;
+    right:20px;
+    height:100%;
+}
+#user img{
+    display: inline-block;
+    width:36px;
+    cursor:pointer;
+}
+#userName{
+    display: flex;
+    margin:auto 0px auto 20px;
+}
+
+#arrow{
+    list-style: none;
+    margin:auto 10px;
+    display: inline-block;
+    position: relative;
+    width:0px;
+    height:0px;
+    border:10px solid gray;
+    border-color:transparent transparent transparent gray;
+    cursor:pointer;
+}
+#arrow.show{
+    transform: translate(0,5px);
+    border:10px solid gray;
+    border-color:gray transparent transparent transparent;
+}
+#quit{
+    display: none;
+}
+#quit.show{
+    display: block;
+    color:white;
+    background:#00ace6;
+    position: relative;
+    width:40px;
+    letter-spacing: 3px;
+    top: 20px;
+    left:-20px;
+}
+#main_frame{
+    width:100%;
+    margin-top:80px;
+}

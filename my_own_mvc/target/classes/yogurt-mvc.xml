@@ -1,0 +1,6 @@
+<beans>
+    <component-scan package="com.yogurt.controller"/>
+
+    <bean id="requestMappingHandler" class="com.yogurt.handlerMapping.RequestMappingHandlerMapping" init-method="init"/>
+    <bean id="requestMappingAdapater" class="com.yogurt.handlerAdapter.RequestHandlerAdapter"/>
+</beans>
