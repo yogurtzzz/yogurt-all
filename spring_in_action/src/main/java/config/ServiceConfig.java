@@ -1,11 +1,12 @@
 package config;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import niceFood.BeanAOP;
+import org.springframework.context.annotation.*;
+import pojo.Fruit;
 
 @Configuration
 @EnableAspectJAutoProxy
-@ComponentScan(basePackages = {"service","aop","anotherService"})
+//@ComponentScan(basePackages = {"service","aop","pojo"})
+@ComponentScan(basePackageClasses = {BeanAOP.class, Fruit.class})
 public class ServiceConfig {
 }

@@ -10,6 +10,7 @@
         <module name="other_simple_test" />
         <module name="spring_built_by_yogurt" />
         <module name="spring_in_action" />
+        <module name="YogurtUtil" />
       </profile>
     </annotationProcessing>
   </component>

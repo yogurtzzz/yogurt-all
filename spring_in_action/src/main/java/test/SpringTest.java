@@ -10,9 +10,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import pojo.FruitPlate;
 import service.Args;
 import service.DinnerService;
 import service.SomeService;
+import sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl;
 
 import java.util.List;
 import java.util.Map;
@@ -38,5 +40,17 @@ public class SpringTest {
 
         NewFunction function = (NewFunction) dinnerService;
         function.fun();
+    }
+
+    @Test
+    public void testLookup() throws InterruptedException {
+        Environment environment = context.getEnvironment();
+        System.out.println(environment.getProperty("db.connection.count"));
+        FruitPlate plate = (FruitPlate) context.getBean(FruitPlate.class);
+        plate.serveFruits();
+//        Thread.sleep(100);
+//        plate.serveFruits();
+//        Thread.sleep(100);
+//        plate.serveFruits();
     }
 }

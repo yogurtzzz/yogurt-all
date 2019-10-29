@@ -14,6 +14,7 @@
         <module>algorithm_and_datastructure</module>
         <module>spring_built_by_yogurt</module>
         <module>other_simple_test</module>
+        <module>YogurtUtil</module>
     </modules>
     <properties>
         <java_version>1.8</java_version>
