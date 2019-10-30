@@ -1,0 +1,49 @@
+下面的序号与  /img 中的图片对应起来
+
+1. 首先新建一个粗糙的BeanFactory接口
+    |- 拥有getBeanDefinition(beanId)方法
+    |- 拥有getBean(beanId) 方法
+可以根据beanId获取bean的定义，和bean的实例
+
+2. 编写默认实现类 DefaultBeanFactory
+    |- 传入xml配置文件的路径
+    |- 利用dom4j 解析xml文件，封装成BeanDefinition，存入到map中
+
+    |- bean的实例化延缓到getBean(beanId)方法中去
+
+3. 抽象出 【解析bean的异常】，【实例化bean的异常】，来代替原有的一些异常
+
+4. 根据单一职责原则，DefaultBeanFactory中的任务太重了。 故把【解析XML的功能】单独抽取出来，形成一个XMLReader
+    |- 职责：即引起变化的原因。
+    |- 对一个类而言，应该仅有一个引起它变化的原因
+
+5. BeanDefinition是一个内部概念，不应该暴露给外部接口，故把BeanDefinition抽象成一个新的接口 BeanDefinitionRegistry
+    BeanDefinitionRegistry中提供 getBeanDefinition 和 registerBeanDefinition方法
+    XMLReader持有一个BeanDefinitionRegistry，解析完后就调用其registerBeanDefinition方法进行BeanDefinition的注册
+
+6. BeanFactory的使用太复杂了（还需要手动调用XMLReader进行解析装载），所以再抽象一个ApplicationContext 上下文接口
+   将逻辑封装起来，作为客户端调用的统一入口
+
+   在ApplicationContext的实现类中，持有一个DefaultBeanFactory
+   封装了XML解析，以及BeanFactory的初始化，对外只暴露一个getBean方法
+   getBean被委托给了DefaultBeanFactory
+
+7. 对 XML文件的获取，可能是不一样的，ClassPathXmlApplicationContext是从classpath下获取的xml
+    而FileSystemApplicationContext是从文件系统中获取的xml
+    我们可以把 【获取xml】这个不同点抽取出来，形成一个【Resource】接口，这个Resource接口对外提供一个getInputStream方法
+    并修改XmlReader中解析Xml文件的入参，由原先的String改为Resource
+
+8. ClassPathXmlApplicationContext 和 FileSystemApplicationContext 仅仅只有获取Resource这一步不同，于是
+    使用<模板方法> 设计模式，将公共部分抽取出来，将不同的部分(获取Resource)写成一个abstract方法，让子类去实现
+
+9. 在需要用到ClassLoader的地方（比如在classpath下加载xml文件，根据className去加载一个类），我们的ClassLoader是写死的
+   这样不太好。如何能够自己设置自定义的ClassLoader呢？
+   增加一个ConfigurableBeanFactory 提供 set/get beanClassLoader 的方法
+   让DefaultBeanFactory实现这个接口
+
+11. Bean的Scope，在BeanDefinition中添加Scope属性
+    并且修改XmlReader中解析XML文件的代码
+    增加一个新的用于注册单例bean 的接口SingletonRegistry，提供2个方法 getSingleton 和 registerSingleton
+    并编写一个默认实现类 DefaultSingletonBeanRegistry
+    改写DefaultBeanFactory，使其继承自DefaultSingletonBeanRegistry
+

@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="algorithm_and_datastructure" />
+        <module name="little_spring" />
         <module name="other_simple_test" />
         <module name="spring_built_by_yogurt" />
         <module name="spring_in_action" />
