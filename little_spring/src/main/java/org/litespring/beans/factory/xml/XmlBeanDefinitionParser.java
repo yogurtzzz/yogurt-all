@@ -4,11 +4,16 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.GenericBeanDefinition;
 import org.litespring.beans.exception.BeanDefinitionParseException;
 import org.litespring.beans.factory.BeanDefinitionRegistry;
+import org.litespring.core.di.PropertyValue;
+import org.litespring.core.di.RuntimeBeanReference;
+import org.litespring.core.di.TypedStringValue;
 import org.litespring.core.io.Resource;
 import org.litespring.util.ClassLoaderUtils;
+import org.litespring.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,9 +21,16 @@ import java.util.Iterator;
 
 //解析XML文件，装载BeanDefinition信息，并注册到BeanDefinitionRegistry
 public class XmlBeanDefinitionParser {
+    private static final String BEAN_ELEMENT = "bean";
     private static final String ID_ATTRIBUTE = "id";
     private static final String CLASS_ATTRIBUTE = "class";
     private static final String SCOPE_ATTRIBUTE = "scope";
+
+    private static final String PROPERTY_ELEMENT = "property";
+    private static final String PROPERTY_NAME_ATTRIBUTE = "name";
+    private static final String PROPERTY_REF_ATTRIBUTE = "ref";
+    private static final String PROPERTY_VALUE_ATTRIBUTE = "value";
+
 
     private BeanDefinitionRegistry beanDefinitionRegistry;
     public XmlBeanDefinitionParser(BeanDefinitionRegistry beanDefinitionRegistry){
@@ -33,7 +45,7 @@ public class XmlBeanDefinitionParser {
         try {
             Document document = xmlReader.read(inputStream);
             Element root = document.getRootElement();
-            Iterator<Element> iterator = root.elementIterator();
+            Iterator<Element> iterator = root.elementIterator(BEAN_ELEMENT);
             while (iterator.hasNext()){
                 Element element = iterator.next();
                 String id = element.attributeValue(ID_ATTRIBUTE);
@@ -46,7 +58,9 @@ public class XmlBeanDefinitionParser {
                     int lastIndex = className.lastIndexOf(".");
                     id = className.substring(lastIndex == -1 ? 0 : lastIndex);
                 }
-                beanDefinitionRegistry.registerBeanDefinition(id,new GenericBeanDefinition(id,className,scope));
+                BeanDefinition beanDefinition = new GenericBeanDefinition(id,className,scope);
+                parsePropertyElement(element,beanDefinition);
+                beanDefinitionRegistry.registerBeanDefinition(id,beanDefinition);
             }
         } catch (DocumentException e) {
             throw new BeanDefinitionParseException(e);
@@ -58,6 +72,28 @@ public class XmlBeanDefinitionParser {
             } catch (IOException e) {
                 throw new BeanDefinitionParseException(e);
             }
+        }
+    }
+    private void parsePropertyElement(Element element,BeanDefinition beanDefinition){
+        Iterator<Element> iterator2 = element.elementIterator(PROPERTY_ELEMENT);
+        while (iterator2.hasNext()){
+            Element propertyElement = iterator2.next();
+            String propertyName = propertyElement.attributeValue(PROPERTY_NAME_ATTRIBUTE);
+            String propertyValue = propertyElement.attributeValue(PROPERTY_VALUE_ATTRIBUTE);
+            String propertyRef = propertyElement.attributeValue(PROPERTY_REF_ATTRIBUTE);
+            if (StringUtils.isBlank(propertyName)){
+                throw new BeanDefinitionParseException("property name can not be absent");
+            }
+            if (propertyValue == null && StringUtils.isBlank(propertyRef)){
+                throw new BeanDefinitionParseException("property value can not be absent");
+            }
+            if (propertyValue != null && StringUtils.isNotBlank(propertyRef)){
+                throw new BeanDefinitionParseException("value and ref can not both be assigned");
+            }
+            if (propertyValue != null)
+                beanDefinition.addPropertyValue(new PropertyValue(propertyName,new TypedStringValue(propertyValue)));
+            else
+                beanDefinition.addPropertyValue(new PropertyValue(propertyName,new RuntimeBeanReference(propertyRef)));
         }
     }
 }

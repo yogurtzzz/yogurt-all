@@ -9,7 +9,7 @@ import org.litespring.service.v1.FruitStoreService;
 
 import java.io.IOException;
 
-public class ApplicationContextTest {
+public class ApplicationContextTestV1 {
 
 
     @Test

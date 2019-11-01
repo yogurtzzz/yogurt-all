@@ -6,14 +6,28 @@ import org.litespring.beans.enums.BeanScope;
 import org.litespring.beans.exception.BeanInstantiationException;
 import org.litespring.beans.factory.BeanDefinitionRegistry;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
+import org.litespring.core.di.PropertyValue;
+import org.litespring.core.di.RuntimeBeanReference;
+import org.litespring.core.di.TypedStringValue;
 import org.litespring.util.ClassLoaderUtils;
+import org.litespring.util.StringUtils;
+
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
         implements ConfigurableBeanFactory, BeanDefinitionRegistry {
 
     private Map<String,BeanDefinition> beanDefinitionMap = new HashMap<>();
+
+    private BeanPropertyValueResolver resolver;
 
     //ConfigurableBeanFactory接口
     private ClassLoader classLoader;
@@ -50,6 +64,17 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
     }
 
     private Object createBean(BeanDefinition beanDefinition){
+        //bean实例化
+        Object bean = beanInstantiation(beanDefinition);
+        //setter 依赖注入
+        try {
+            loadProperty(beanDefinition,bean);
+        } catch (Exception e) {
+            throw new BeanInstantiationException(e);
+        }
+        return bean;
+    }
+    private Object beanInstantiation(BeanDefinition beanDefinition){
         String beanClassName = beanDefinition.getBeanClassName();
         String beanId = beanDefinition.getId();
         ClassLoader classLoader = this.getBeanClassLoader();
@@ -60,6 +85,33 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
         } catch (Exception e) {
             throw new BeanInstantiationException("Create bean for " + beanClassName +" failed",e);
         }
+    }
+    private void loadProperty(BeanDefinition beanDefinition,Object instance) throws InvocationTargetException, IllegalAccessException, IntrospectionException {
+        List<PropertyValue> pvs = beanDefinition.getPropertyValues();
+        Class<?> clzz = instance.getClass();
+        if (pvs == null || pvs.isEmpty())
+            return;
+        /**
+         * 进行setter注入
+         */
+        for (PropertyValue pv : pvs) {
+            String propertyName = pv.getPropertyName();
+            Object originalValue = pv.getPropertyValue();
+            BeanPropertyValueResolver valueResolver = new BeanPropertyValueResolver(this);
+
+            BeanInfo beanInfo = Introspector.getBeanInfo(clzz);
+
+            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+            for (PropertyDescriptor descriptor : propertyDescriptors){
+                if (descriptor.getName().equals(propertyName)){
+                    Class<?> paramClzz = descriptor.getPropertyType();
+                    Object resolvedValue = valueResolver.resolveValueIfNecessary(originalValue,paramClzz);
+                    descriptor.getWriteMethod().invoke(instance,resolvedValue);
+                    break;
+                }
+            }
+        }
+
     }
 
     @Override

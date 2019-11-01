@@ -47,3 +47,19 @@
     并编写一个默认实现类 DefaultSingletonBeanRegistry
     改写DefaultBeanFactory，使其继承自DefaultSingletonBeanRegistry
 
+
+12. 实现Setter注入
+    使用了BeanDefinition来封装<bean>标签里的id，class
+    那么property该如何注入呢？ 定义一个PropertyValue来封装属性名和属性值,属性值分为value和ref，用2个不同的类来表示
+    BeanDefinition中添加方法getPropertyValues()
+
+    通过添加一个ValueResolver，来根据value或ref，获取真实的value值
+
+    使用JAVA自带的Introspector的内省机制，
+    PropertyDescriptor
+    来获取bean的写方法
+    来调用set方法进行注入
+
+13. 注入字面量时，xml里写的是字符串
+    而实际注入的类型，可能是String，也可能是基本类型，
+    故需要加一个TypeConverter

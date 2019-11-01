@@ -1,12 +1,17 @@
 package org.litespring.beans;
 
-import org.apache.commons.lang3.StringUtils;
 import org.litespring.beans.enums.BeanScope;
+import org.litespring.core.di.PropertyValue;
+import org.litespring.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GenericBeanDefinition implements BeanDefinition {
     private String id;
     private String className;
     private BeanScope scope;
+    private List<PropertyValue> propertyValues = null;
     public GenericBeanDefinition(String id,String className){
         this.id = id;
         this.className = className;
@@ -20,6 +25,13 @@ public class GenericBeanDefinition implements BeanDefinition {
         }else{
             this.scope = BeanScope.valueOf(scope.toUpperCase());
         }
+    }
+
+    public void addPropertyValue(PropertyValue pv){
+        if (this.propertyValues == null){
+            this.propertyValues = new ArrayList<>();
+        }
+        this.propertyValues.add(pv);
     }
     @Override
     public String getBeanClassName() {
@@ -44,6 +56,11 @@ public class GenericBeanDefinition implements BeanDefinition {
     @Override
     public BeanScope getScope() {
         return this.scope;
+    }
+
+    @Override
+    public List<PropertyValue> getPropertyValues() {
+        return this.propertyValues;
     }
 
     public void setScope(String scope){
