@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.dao.UserMapper">
+
+    <!-- 开启二级缓存 -->
+    <!--
+        1.可以使用mybatis自带的缓存实现
+        2.也可以使用自定义的缓存（需要实现mybatis的Cache接口），然后通过type指定自定义缓存，<cache type="com.MyCache"/>
+        3.还可以使用诸如Memcache，Redis等第三方缓存实现
+     -->
+    <cache/>
+
+    <!-- 多个Mapper共享缓存：在另一个mapper映射文件中，使用如下cache-ref 标签，即可与当前mapper共享同一个二级缓存 -->
+    <!--<cache-ref namespace="mybatis.dao.UserMapper"/>-->
+
+    <!-- ##### 原始方式 -->
+    <select id="testDynamicAndStatic" resultType="mybatis.po.User" parameterType="map">
+        SELECT * FROM `user` WHERE name like '%${name}%' AND id = #{id}  ;
+    </select>
+    <select id="findAll" resultType="mybatis.po.User">
+        SELECT * FROM `user` ;
+    </select>
+
+    <select id="findByName" resultType="mybatis.po.User" parameterType="java.lang.String" useCache="false">
+        SELECT * FROM `user` WHERE name = #{name};
+    </select>
+    
+    <select id="fuzzyFind" resultType="mybatis.po.User" parameterType="java.lang.String">
+        SELECT * FROM `user` WHERE name like '%${value}%'
+    </select>
+
+    <!-- 主键返回 -->
+    <insert id="addUser" parameterType="mybatis.po.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `user` (name,age,gender,address) VALUES(
+        #{name},#{age},#{gender},#{address}
+        )
+    </insert>
+
+    <insert id="addUser2" parameterType="mybatis.po.User">
+        INSERT INTO `user` (name,age,gender,address) VALUES(
+        #{name},#{age},#{gender},#{address}
+        <selectKey keyProperty="id" order="AFTER" resultType="int">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM `user` WHERE id = #{id}
+    </delete>
+
+    <update id="updateById" parameterType="mybatis.po.User">
+        UPDATE `user` SET name = #{name},age = #{age},gender = #{gender},address = #{address}
+        WHERE id = #{id}
+    </update>
+
+    <!-- ######################################### v2 mapper代理 -->
+    <select id="findUserById" resultType="mybatis.po.User" parameterType="int" useCache="true">
+        SELECT * FROM `user` WHERE id = #{id};
+    </select>
+    <insert id="insertUser" parameterType="mybatis.po.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `user` (name,age,gender,address) VALUES(
+        #{name},#{age},#{gender},#{address}
+        )
+    </insert>
+
+    <update id="updateUser" parameterType="mybatis.po.User">
+        UPDATE `user` SET name = #{name},age = #{age},gender = #{gender},address = #{address}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteUserById" parameterType="int">
+        DELETE FROM `user` WHERE id = #{id}
+    </delete>
+
+    <!-- 多个查询参数
+       1 封装成一个QueryVo
+       2 使用Map
+     -->
+    <select id="findByMultiCondition" parameterType="queryVo" resultType="user">
+        SELECT * FROM `user` WHERE name like '%${name}%' and gender = #{gender}
+    </select>
+
+    <select id="findByMap" parameterType="map" resultType="user">
+        SELECT * FROM `user` WHERE name like '%${name}%' and gender = #{gender}
+    </select>
+
+    <!-- 一对一关联映射 -->
+    <resultMap id="order2buyer" type="mybatis.po.OrderExt">
+        <id property="id" column="id"/>
+        <result property="product" column="product"/>
+        <result property="price" column="price"/>
+        <result property="dealTime" column="dealTime"/>
+        <result property="buyerId" column="buyerId"/>
+        <association property="user" javaType="user">
+            <id property="id" column="u_id"/>
+            <result property="name" column="u_name"/>
+            <result property="age" column="u_age"/>
+            <result property="gender" column="u_gender"/>
+            <result property="address" column="u_address"/>
+        </association>
+    </resultMap>
+    <!-- 注意order 是 sql的关键字，记得在表名order左右加上`` -->
+    <select id="findOrderAndBuyer" parameterType="int" resultMap="order2buyer">
+        SELECT
+        o.*,
+        u.id u_id,
+        u.name u_name,
+        u.age u_age,
+        u.gender u_gender,
+        u.address u_address
+        FROM `product_order` o
+        LEFT JOIN `user` u
+        ON o.buyerId = u.id
+        WHERE o.id = #{id}
+    </select>
+
+    <!-- 一对多关联查询 -->
+    <resultMap id="buyer2order" type="mybatis.po.BuyerExt">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="age" column="age"/>
+        <result property="gender" column="gender"/>
+        <result property="address" column="address"/>
+        <collection property="orders" ofType="order">
+            <id property="id" column="o_id"/>
+            <result property="product" column="o_product"/>
+            <result property="price" column="o_price"/>
+            <result property="dealTime" column="o_dealTime"/>
+            <result property="buyerId" column="o_buyerId"/>
+        </collection>
+    </resultMap>
+    <select id="findBuyerAndOrder" parameterType="int" resultMap="buyer2order">
+        SELECT u.*,
+          o.id o_id,
+          o.product o_product,
+          o.price o_price,
+          o.dealTime o_dealTime,
+          o.buyerId o_buyerId
+        FROM `user` u
+        LEFT JOIN `product_order` o
+        ON o.buyerId = u.id
+        WHERE u.id = #{id}
+    </select>
+
+    <!-- 延迟加载 -->
+
+    <resultMap id="buyer2order2" type="mybatis.po.BuyerExt">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="age" column="age"/>
+        <result property="gender" column="gender"/>
+        <result property="address" column="address"/>
+        <collection property="orders" ofType="order" column="id" select="findOrderByBuyerId" fetchType="lazy"/>
+    </resultMap>
+
+    <select id="findUserAndOrdersLazy" parameterType="int" resultMap="buyer2order2">
+        SELECT * FROM `user` WHERE id = #{id}
+    </select>
+
+    <!-- 下面是嵌套的子查询 -->
+    <select id="findOrderByBuyerId" resultType="order" parameterType="int">
+        SELECT * FROM `product_order` WHERE buyerId = #{buyerId}
+    </select>
+
+    <!-- 动态SQL -->
+    <select id="findSelective" parameterType="mybatis.dto.QueryVo" resultType="mybatis.po.User">
+        SELECT * FROM `user`
+        <where>
+            <if test="name != null and name != ''">
+                AND name like '%${name}%'
+            </if>
+
+            <if test="address != null and address != ''">
+                AND address like '%${address}%'
+            </if>
+            <if test="gender != null">
+                AND gender = #{gender}
+            </if>
+        </where>
+    </select>
+
+    <!-- for each -->
+    <!--
+        若入参类型(parameterType)是 List 或 Array ，而不是POJO
+        那么在foreach标签中的collection属性必须固定为 list 或 array
+     -->
+    <select id="find4Each" parameterType="queryVo" resultType="mybatis.po.User">
+        SELECT * FROM `user` WHERE id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+
+</mapper>
