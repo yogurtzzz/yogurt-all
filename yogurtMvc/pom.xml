@@ -2,11 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>all</artifactId>
+        <groupId>project.yogurt</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>groupId</groupId>
-    <artifactId>YogurtMvc</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>yogurtMvc</artifactId>
     <!-- 他娘的，设置了packaging为war后，启动后一直报404 删除了这个设置也没用！-->
     <packaging>war</packaging>
 
