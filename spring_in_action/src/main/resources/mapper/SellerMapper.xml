@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis_spring.mapper.SellerMapper">
+
+    <select id="findById" parameterType="int" resultType="mybatis_spring.po.Seller">
+        SELECT * FROM `seller` WHERE id = #{id}
+    </select>
+    <insert id="addOne" parameterType="mybatis_spring.po.Seller">
+        INSERT INTO `seller` (star_level,address,shop_name,open_year) VALUES
+        (#{star_level},#{address},#{shop_name},#{open_year})
+    </insert>
+</mapper>

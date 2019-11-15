@@ -27,6 +27,9 @@
         <value>彩虹</value>
         <value>告白气球</value>
     </util:list>
+    <util:list id="beanList">
+        <ref bean="students"/>
+    </util:list>
     <util:list id="students">
         <bean class="niceFood.Student" p:name="yogurt1" p:score="60"/>
         <bean class="niceFood.Student" p:name="yogurt2" p:score="59"/>
@@ -39,4 +42,5 @@
         <!--&lt;!&ndash; 使用基于接口的代理 &ndash;&gt;-->
         <!--<aop:scoped-proxy proxy-target-class="false"/>-->
     <!--</bean>-->
+
 </beans>
