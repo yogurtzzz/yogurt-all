@@ -12,7 +12,6 @@
     <artifactId>yogurtMvc</artifactId>
     <!-- 他娘的，设置了packaging为war后，启动后一直报404 删除了这个设置也没用！-->
     <packaging>war</packaging>
-
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -47,6 +46,15 @@
                     <source>1.8</source>
                     <target>1.8</target>
                     <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <port>8080</port>
+                    <path>/</path>
                 </configuration>
             </plugin>
         </plugins>

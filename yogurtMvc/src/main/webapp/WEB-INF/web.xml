@@ -8,12 +8,12 @@
         <servlet-class>com.yogurt.servlet.YogurtServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>classpath:yogurt-mvc.xml</param-value>
+            <param-value>yogurt-mvc.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>yogurtServlet</servlet-name>
-        <url-pattern>/yogurtMvc</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 </web-app>
