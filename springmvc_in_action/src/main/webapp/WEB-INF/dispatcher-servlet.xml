@@ -13,8 +13,23 @@
     <!-- 配置内置的HandlerMapping和HandlerAdapter
        其内置了RequestMappingHandler的映射器和处理器
       -->
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven conversion-service="conversionService"/>
 
+    <!-- 将自定义的Converter交给conversionService，这里面有内置的适配器，适配器会对Converter进行处理 -->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.yogurt.controller.DateConverter"/>
+            </set>
+        </property>
+    </bean>
+
+    <!-- 上传文件时，配置文件解析器 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 这个单位是字节 byte，最大10MB -->
+        <property name="maxUploadSize" value="10485760"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
     <!-- 配置视图解析器 ViewResolver -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/"/>
