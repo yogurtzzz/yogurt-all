@@ -25,4 +25,16 @@ public class SellerController {
 		sellerService.addSeller(seller);
 		return "success";
 	}
+
+	@RequestMapping("query")
+	@ResponseBody
+	public Seller query(Integer id){
+		return sellerService.findById(id);
+	}
+	@RequestMapping("test")
+	@ResponseBody
+	public String test2(){
+		System.out.println("fuck");
+		return "success";
+	}
 }

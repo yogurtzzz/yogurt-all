@@ -6,7 +6,7 @@
     <!-- spring 容器  - 父容器 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/applicationContext.xml</param-value>
+        <param-value>classpath:applicationContext.xml</param-value>
     </context-param>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -37,7 +37,7 @@
         <!-- dispatcherServlet 子容器  -->
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>WEB-INF/dispatcher-servlet.xml</param-value>
+            <param-value>classpath:dispatcher-servlet.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>

@@ -35,4 +35,28 @@
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+
+    <!-- 配置拦截器 -->
+    <mvc:interceptors>
+        <!-- 公共拦截器，拦截所有Handler，可以有多个，按配置顺序进行依次拦截 -->
+        <bean class="com.yogurt.controller.MyInterceptor"/>
+
+        <!-- 特定拦截器，仅拦截 路径为  /seller/* 下的请求 -->
+        <mvc:interceptor>
+            <!-- 匹配所有路径 -->
+            <!--
+                springMVC 拦截器的路径匹配规则
+                * 表示匹配0个或任意个字符
+                ** 表示匹配0个或更多的目录
+                ? 表示匹配单个字符
+
+                /app/*.jsp  可以匹配 /app目录下所有的jsp文件
+                /app/p?tt   可以匹配 /app/patt
+                **/*  匹配任意路径
+            -->
+            <mvc:mapping path="/**/*"/>
+            <mvc:exclude-mapping path="/test*/**"/>
+            <bean class="com.yogurt.controller.SpecialInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>

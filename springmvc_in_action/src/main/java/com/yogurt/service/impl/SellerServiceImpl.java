@@ -16,4 +16,9 @@ public class SellerServiceImpl implements SellerService {
 	public int addSeller(Seller seller) {
 		return sellerDao.addOne(seller);
 	}
+
+	@Override
+	public Seller findById(Integer id) {
+		return sellerDao.findById(id);
+	}
 }

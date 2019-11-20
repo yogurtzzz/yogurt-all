@@ -2,14 +2,12 @@ package com.yogurt.controller;
 
 
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import com.yogurt.dao.po.Seller;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -22,6 +20,32 @@ import java.util.Enumeration;
 
 @Controller
 public class TestController {
+
+	/**
+	 * 会先于本Controller 所有的RequestMapping方法 执行
+	 * @return 返回值会放在Model里，可以用于在页面展示数据
+	 */
+	@ModelAttribute(value = "seller")
+	public Seller pre(){
+		Seller seller = new Seller();
+		seller.setStar_level(4);
+		seller.setShop_name("大黄小店");
+		seller.setAddress("四川");
+		return seller;
+	}
+	//没有返回值的情况
+	//这样配置会导致访问该Controller下的所有@RequestMapping方法，都要求传入param 参数
+	//增加一个required = false 即可
+	@ModelAttribute
+	public void preProcess(@RequestParam(value = "param",required = false) String additional,Model model){
+		if (additional != null)
+			model.addAttribute("add",additional);
+	}
+
+	@RequestMapping("testModelAttribute")
+	public String modelA(){
+		return "model";
+	}
 
 	@RequestMapping("testJsp")
 	public String jsp(Model model){
@@ -100,25 +124,38 @@ public class TestController {
 			return "File is null";
 		String savePath = req.getSession().getServletContext().getRealPath("/") + "filesReceived\\";
 		String fileName = file.getName(); //这一句是获取了MultipartFile的参数名称（在http请求中的入参的key）
-		String originalName = file.getOriginalFilename();
+		String originalName = file.getOriginalFilename(); //这是文件的原始名称
 		String fileType = originalName.substring(originalName.lastIndexOf("."));
 
 		File dir = new File(savePath);
 		if (!dir.exists())
 			dir.mkdirs();
 
-		//若不存在路径，需要实现创建好文件夹目录
+		//若不存在路径，需要事先创建好文件夹目录
 
 		File storeFile = new File(savePath + originalName);
 		if (fileType.equals("pdf")){
 			//这一句会直接将文件内容输出到storeFile
 			file.transferTo(storeFile);
 		}
-		return "success";
+		return "file save to " + savePath + originalName;
 	}
 	@RequestMapping("upload")
 	public String testUpload() {
 		return "upload";
+	}
+
+	@RequestMapping("testEx")
+	@ResponseBody
+	public String testEx(int which) throws IOException {
+		if (which == 1)
+			throw new FileNotFoundException();
+		else if(which == 2)
+			throw new EOFException();
+		else if (which == 3)
+			throw new UnsupportedEncodingException();
+
+		return "fail";
 	}
 
 }
