@@ -1,21 +1,22 @@
 package binary_tree;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Optional;
-import java.util.Stack;
+import sun.reflect.generics.tree.Tree;
+
+import java.util.*;
 
 public class ArrayImpl {
     public static void main(String[] args) {
         Integer[] nodes = {3,2,9,null,null,10,null,null,8,null,4};
+        Integer[] nodes2 = {10,5,2,null,null,9,8,7,null,null,4,null,null,null,3,6,null,null,13,11,null,null,20};
         LinkedList<Integer> inputNodes = new LinkedList<>(Arrays.asList(nodes));
         TreeNode root = createTree(inputNodes);
-        System.out.println("PreOrder:");
-        preOrder(root);
-        System.out.println("MidOrder:");
-        midOrder(root);
+        //System.out.println("PreOrder:");
+        //preOrderWithStack(root);
+        //preOrderNonRecursive(root);
+//        System.out.println("MidOrder:");
+//        midOrderWithStack(root);
         System.out.println("PostOrder:");
-        postOrder(root);
+        postOrderWithStack(root);
     }
 
     /**
@@ -114,4 +115,104 @@ public class ArrayImpl {
             }
         }
     }
+
+    /**
+     * Non Concurrent Safe
+     * @param <T>
+     */
+    private static class MyStack<T>{
+        private Deque<T> stack = new LinkedList<>();
+        private int size = 0;
+        public T pop(){
+            T ele = stack.pollFirst();
+            if (ele != null)
+                size--;
+            return ele;
+        }
+
+        public void push(T e){
+            stack.addFirst(e);
+            size++;
+        }
+
+        public T peek(){
+            T ele = stack.peekFirst();
+            return ele;
+        }
+        public int getSize(){
+            return this.size;
+        }
+        public boolean isEmpty(){
+            return size == 0;
+        }
+    }
+
+    /**
+     * 用栈实现的非递归前序遍历
+     * @param root
+     */
+    public static void preOrderWithStack(TreeNode root){
+        MyStack<TreeNode> stack = new MyStack<>();
+        if (root == null)
+            return ;
+        System.out.println(root.value);
+        stack.push(root);
+        TreeNode current = root.leftSon;
+        while (current != null || !stack.isEmpty()){
+            if (current != null){
+                System.out.println(current.value);
+                stack.push(current);
+                current = current.leftSon;
+            }else if (!stack.isEmpty()){
+                TreeNode parent = stack.pop();
+                current = parent.rightSon;
+            }
+        }
+    }
+
+    /**
+     * 用栈实现的非递归中序遍历
+     * @param root
+     */
+    public static void midOrderWithStack(TreeNode root){
+        MyStack<TreeNode> stack = new MyStack<>();
+        if (root == null)
+            return ;
+        stack.push(root);
+        TreeNode current = root.leftSon;
+        while (current != null || !stack.isEmpty()){
+            if (current != null){
+                stack.push(current);
+                current = current.leftSon;
+            }else if (!stack.isEmpty()){
+                TreeNode mid = stack.pop();
+                System.out.println(mid.value);
+                current = mid.rightSon;
+            }
+        }
+    }
+    /**
+     * 用栈实现的非递归后序遍历
+     */
+    public static void postOrderWithStack(TreeNode root){
+        MyStack<TreeNode> stack = new MyStack<>();
+        MyStack<TreeNode> temp = new MyStack<>();
+        if (root == null)
+            return ;
+        temp.push(root);
+        while (!temp.isEmpty()){
+            TreeNode current = temp.pop();
+            stack.push(current);
+            if (current.leftSon != null)
+                temp.push(current.leftSon);
+            if (current.rightSon != null)
+                temp.push(current.rightSon);
+        }
+
+        while (!stack.isEmpty()){
+            System.out.println(stack.pop().value);
+        }
+    }
+
+
 }
