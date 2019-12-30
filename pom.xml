@@ -12,10 +12,13 @@
     <modules>
         <module>spring_in_action</module>
         <module>algorithm_and_datastructure</module>
-        <module>spring_built_by_yogurt</module>
         <module>other_simple_test</module>
         <module>YogurtUtil</module>
         <module>little_spring</module>
+        <module>mybatis_in_action</module>
+        <module>design_pattern</module>
+        <module>yogurtMvc</module>
+        <module>springmvc_in_action</module>
     </modules>
     <properties>
         <java_version>1.8</java_version>
@@ -55,6 +58,12 @@
                 <artifactId>spring-aop</artifactId>
                 <version>${spring_version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring_version}</version>
+            </dependency>
             <dependency>
                 <groupId>aopalliance</groupId>
                 <artifactId>aopalliance</artifactId>
@@ -79,6 +88,42 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.11</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>3.4.6</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>1.3.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>1.0.9</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>3.2.6</version>
+            </dependency>
+
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>2.9.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

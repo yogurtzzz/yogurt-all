@@ -3,6 +3,10 @@ package list;
 import java.util.Iterator;
 import java.util.ListIterator;
 
+/**
+ * 自实现的LinkedList
+ * @param <T>
+ */
 public class YogurtLinkedList<T> implements YogurtList<T> {
     @Override
     public Iterator<T> iterator() {

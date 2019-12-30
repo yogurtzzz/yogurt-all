@@ -14,8 +14,6 @@ public class BubbleSort extends TimingSort {
         //每次冒泡一个最大的上去
         for (int i = arr.length - 1; i > 0; i--){
             for (int j = 0; j < i; j++){
-                if (j + 1 > i)
-                    break;
                 if (arr[j] > arr[j+1])
                     swap(arr,j,j+1);
             }

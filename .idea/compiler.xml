@@ -7,12 +7,18 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="algorithm_and_datastructure" />
+        <module name="design_pattern" />
         <module name="little_spring" />
+        <module name="mybatis_in_action" />
         <module name="other_simple_test" />
-        <module name="spring_built_by_yogurt" />
         <module name="spring_in_action" />
+        <module name="springmvc_in_action" />
+        <module name="yogurtMvc" />
         <module name="YogurtUtil" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="spring_built_by_yogurt" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

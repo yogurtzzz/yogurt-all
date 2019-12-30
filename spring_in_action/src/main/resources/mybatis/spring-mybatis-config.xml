@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- spring mybatis 整合 -->
 <beans
         xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -66,7 +67,7 @@
 
     <bean id="orderDao" class="mybatis_spring.dao.impl.OrderDaoImpl"/>
 
-    <!--  开启注解方式 -->
+    <!--  开启注解方式管理事务 -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <bean id="sellerDao" class="mybatis_spring.dao.impl.SellerDaoImpl"/>

@@ -26,7 +26,7 @@ public class QuickSort extends TimingSort {
         int posL = left + 1;
         int posR = right;
         boolean moveRight = true;
-        while (posL < posR + 1){
+        while (posL <= posR){
             //posL = posR + 1 时退出，划分完毕，左边全是小于pivot,右边全是大于pivot
             if (moveRight){
                 if (arr[posR] < pivot){

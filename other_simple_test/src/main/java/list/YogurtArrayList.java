@@ -5,6 +5,10 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+/**
+ * 自实现的ArrayList
+ * @param <T>
+ */
 public class YogurtArrayList<T> implements YogurtList<T>{
 
     private transient Object[] elementData;
@@ -72,6 +76,7 @@ public class YogurtArrayList<T> implements YogurtList<T>{
         System.arraycopy(elementData,index,elementData,index +1 ,size - index);
         elementData[index] = item;
         size++;
+        modCount++;
     }
 
     @Override
@@ -82,13 +87,13 @@ public class YogurtArrayList<T> implements YogurtList<T>{
 
     @Override
     public void remove(T item) {
-        modCount++;
         for (int i = 0 ; i < size; i++){
             if (Objects.equals(elementData[i],item)){
                 if (i != size - 1){
                     System.arraycopy(elementData,i + 1,elementData,i,size - i - 1);
                 }
                 elementData[--size] = null;
+                modCount++;
                 return ;
             }
         }
@@ -97,11 +102,11 @@ public class YogurtArrayList<T> implements YogurtList<T>{
     @Override
     public void remove(int index) {
         checkIndex(index);
-        modCount++;
         if (index != size - 1){
             System.arraycopy(elementData,index + 1,elementData,index,size - index - 1);
         }
         elementData[--size] = null;
+        modCount++;
     }
 
     @Override

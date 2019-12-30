@@ -7,6 +7,8 @@ import mybatis_spring.po.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -48,6 +50,7 @@ public class Mybatis_SpringTest {
 	//注解式事务
 	@Test
 	public void test3(){
+		ApplicationContext context = new ClassPathXmlApplicationContext("");
 		Seller seller = new Seller();
 		seller.setShop_name("大黄的小店");
 		seller.setStar_level(3);

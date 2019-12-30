@@ -155,7 +155,7 @@ public class MapperProxyTest {
 		QueryVo queryVo = new QueryVo();
 		queryVo.setName("am");
 		queryVo.setAddress("");
-		//PageHelper.startPage(2,2);
+		PageHelper.startPage(2,2);
 		//是通过mybatis的plugin接口
 		//加入一个拦截器
 		//会查询SELECT COUNT

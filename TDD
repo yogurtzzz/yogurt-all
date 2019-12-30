@@ -13,3 +13,9 @@ TDD：Test-Driven-Development
 2. 运行，失败（为了避免原始程序恰好使得该测试用例通过）
 3. 写Just Enough的代码，使该测试用例通过
 4. goto 1. 进行代码重构，保持测试通过
+
+
+TDD思路：
+1. 针对接口写  "high level" 的测试用例，暂时可以不用pass，保持其fail状态
+2. 对一些子任务写测试用例
+3. 将子任务生成的代码，类，组合起来，使得 high level 的测试用例通过
