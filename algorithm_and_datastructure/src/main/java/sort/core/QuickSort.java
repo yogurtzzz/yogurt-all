@@ -1,7 +1,10 @@
 package sort.core;
 
+
 import org.junit.Test;
 import utils.ArrayUtil;
+import utils.MyPair;
+import utils.MyStack;
 
 public class QuickSort {
 	//基于分治法，重点在于基准点的选举
@@ -11,7 +14,7 @@ public class QuickSort {
 		quickSort(arr,0,arr.length - 1);
 	}
 
-	/** 我自己的实现 **/
+	/** 原先，我自己的实现，仅知道一个双边循环 **/
 	private void quickSort(int[] arr, int left,int right){
 		if (left >= right)
 			return;
@@ -144,8 +147,40 @@ public class QuickSort {
 	@Test
 	public void test() {
 		int[] arr = ArrayUtil.createRandomArray(-100,200,100);
-		quickSortBest(arr,0,arr.length - 1);
+		quickSortWithStack(arr,0,arr.length - 1);
 		ArrayUtil.printArray(arr);
 		ArrayUtil.assertSorted(arr);
+	}
+
+	/** 用栈实现的非递归版 快排，这时可以将分区的部分代码单独写成一个partition函数了 **/
+	public void quickSortWithStack(int[] arr,int left,int right){
+		MyStack<MyPair<Integer, Integer>> stack = new MyStack<>();
+		stack.push(new MyPair<>(left,right));
+
+		while (!stack.isEmpty()){
+			MyPair<Integer,Integer> pair = stack.pop();
+			int start = pair.getLeft();
+			int end = pair.getRight();
+			if (start >= end)
+				continue;
+			/**下面尝试将partition函数写在这里，不单独另起函数了**/
+			int pivot = arr[start];
+			int mark = start;
+			int posLeft = start + 1;
+			while (posLeft <= end){
+				if (arr[posLeft] < pivot){
+					mark++;
+					int t = arr[mark];
+					arr[mark] = arr[posLeft];
+					arr[posLeft] = t;
+				}
+				posLeft++;
+			}
+			arr[start] = arr[mark];
+			arr[mark] = pivot;
+			/****/
+			stack.push(new MyPair<>(mark + 1,end));
+			stack.push(new MyPair<>(start,mark - 1));
+		}
 	}
 }
