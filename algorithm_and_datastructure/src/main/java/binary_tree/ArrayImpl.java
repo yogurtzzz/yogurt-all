@@ -1,9 +1,10 @@
 package binary_tree;
 
-import sun.reflect.generics.tree.Tree;
-import utils.MyStack;
 
-import java.util.*;
+import yogurt.data_structure.stack.Stack;
+
+import java.util.Arrays;
+import java.util.LinkedList;
 
 public class ArrayImpl {
     public static void main(String[] args) {
@@ -53,7 +54,7 @@ public class ArrayImpl {
 
     /**
      * 中序遍历
-     * @param root
+'     * @param root
      */
     public static void midOrder(TreeNode root){
         if (root == null)
@@ -122,7 +123,7 @@ public class ArrayImpl {
      * @param root
      */
     public static void preOrderWithStack(TreeNode root){
-        MyStack<TreeNode> stack = new MyStack<>();
+        Stack<TreeNode> stack = new Stack<>();
         if (root == null)
             return ;
         System.out.println(root.value);
@@ -145,7 +146,7 @@ public class ArrayImpl {
      * @param root
      */
     public static void midOrderWithStack(TreeNode root){
-        MyStack<TreeNode> stack = new MyStack<>();
+        Stack<TreeNode> stack = new Stack<>();
         if (root == null)
             return ;
         stack.push(root);
@@ -165,8 +166,8 @@ public class ArrayImpl {
      * 用栈实现的非递归后序遍历
      */
     public static void postOrderWithStack(TreeNode root){
-        MyStack<TreeNode> stack = new MyStack<>();
-        MyStack<TreeNode> temp = new MyStack<>();
+        Stack<TreeNode> stack = new Stack<>();
+        Stack<TreeNode> temp = new Stack<>();
         if (root == null)
             return ;
         temp.push(root);
@@ -183,6 +184,4 @@ public class ArrayImpl {
             System.out.println(stack.pop().value);
         }
     }
-
-
 }

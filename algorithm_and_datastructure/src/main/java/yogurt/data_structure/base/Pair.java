@@ -1,11 +1,11 @@
-package utils;
+package yogurt.data_structure.base;
 
-public class MyPair<V1,V2> {
+public class Pair<V1,V2> {
 	private V1 left;
 	private V2 right;
 
-	public MyPair(){}
-	public MyPair(V1 left, V2 right) {
+	public Pair(){}
+	public Pair(V1 left, V2 right) {
 		this.left = left;
 		this.right = right;
 	}

@@ -1,7 +1,5 @@
 package magical;
 
-import base.SwapCapable;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +8,7 @@ import java.util.Map;
  * 据说能做到绝对公平
  * 每个数字，在每个位置上出现的概率，是相等的
  */
-public class KnuthShuffle extends SwapCapable {
+public class KnuthShuffle extends MagicalSwap {
 
     public void shuffle(int[] arr){
         for (int i = arr.length - 1; i >= 0; i--){

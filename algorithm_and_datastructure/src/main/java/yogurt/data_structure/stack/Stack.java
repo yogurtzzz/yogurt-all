@@ -1,13 +1,13 @@
-package utils;
+package yogurt.data_structure.stack;
 
 import java.util.Deque;
 import java.util.LinkedList;
 
-/**
- * Non Concurrent Safe
+/****
+ * Non Concurrent safe
  * @param <T>
  */
-public class MyStack<T>{
+public class Stack<T>{
 	private Deque<T> stack = new LinkedList<>();
 	private int size = 0;
 	public T pop(){
