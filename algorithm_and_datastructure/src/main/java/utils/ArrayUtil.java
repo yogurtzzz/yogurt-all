@@ -14,6 +14,10 @@ public class ArrayUtil {
         }
         System.out.println();
     }
+    public static void printArray(Object[] arr){
+        for (Object a : arr)
+            System.out.println(a);
+    }
 
     public static void checkIndex(int[] arr,int i){
         if (i < 0 || i >= arr.length)
