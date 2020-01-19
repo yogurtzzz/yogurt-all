@@ -19,6 +19,8 @@ import static utils.ArrayUtil.printArray;
  * 局限：
  *      不适用于小数
  *      最大值与最小值差距过大时，也不适用
+ *
+ * 线性时间复杂度
  */
 public class CountSort {
 	public void countSort(int[] arr){
