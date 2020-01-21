@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.HashSet;
 
+/** 关于单向链表是否有环的问题 **/
 public class ListWithCircle {
 	static class Node{
 		int val;
@@ -56,6 +57,7 @@ public class ListWithCircle {
 		return false;
 	}
 
+	/** 若有环，求环长 **/
 	public int circleLength(Node head){
 		Node fast,slow;
 		fast = slow = head;
@@ -74,6 +76,7 @@ public class ListWithCircle {
 		}
 		return len;
 	}
+	/** 若有环，求入环点 **/
 	public Node firstNodeInCircle(Node head){
 		Node fast,slow;
 		fast = slow = head;
