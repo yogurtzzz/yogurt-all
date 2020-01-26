@@ -63,7 +63,7 @@ public class TwoListMergeIntoOne {
 		//最后应该有一个链表的节点先取完
 		//这里获取未取完节点的那个链表，从还未操作的节点开始
 
-		//反转单链表，需要注意保留下一个节点的信息
+		//反转单链表，要注意保留下一个需节点的信息
 		//因为改变上一个节点的next指针时，会丢失下一个节点
 		Node remainder = cursorOne != null ? cursorOne : cursorTwo;
 		while(remainder != null){
