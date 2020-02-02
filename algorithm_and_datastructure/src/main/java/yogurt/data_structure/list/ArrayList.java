@@ -1,9 +1,6 @@
 package yogurt.data_structure.list;
 
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 自实现的ArrayList
@@ -122,6 +119,10 @@ public class ArrayList<T> implements List<T>{
 	private void checkIndex(int index){
 		if (index < 0 || index >= size)
 			throw new IllegalArgumentException("Index Out Of Bound Exception");
+	}
+
+	public T[] toArray(T[] a){
+		return (T[])Arrays.copyOf(elementData, size, a.getClass());
 	}
 
 	public Iterator<T> iterator(){

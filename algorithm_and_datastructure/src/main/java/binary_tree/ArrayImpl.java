@@ -1,25 +1,31 @@
 package binary_tree;
 
 
+import org.junit.Test;
+import sun.plugin2.message.TextEventMessage;
 import yogurt.data_structure.stack.Stack;
 
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.LinkedList;
 
 public class ArrayImpl {
-    public static void main(String[] args) {
-        Integer[] nodes = {3,2,9,null,null,10,null,null,8,null,4};
-        Integer[] nodes2 = {10,5,2,null,null,9,8,7,null,null,4,null,null,null,3,6,null,null,13,11,null,null,20};
-        LinkedList<Integer> inputNodes = new LinkedList<>(Arrays.asList(nodes));
+    @Test
+    public void test() {
+//        Integer[] nodes = {3,2,9,null,null,10,null,null,8,null,4};
+//        Integer[] nodes2 = {10,5,2,null,null,9,8,7,null,null,4,null,null,null,3,6,null,null,13,11,null,null,20};
+        Integer[] nodes3 = {2,1,null,null,4,3,null,null,6,5,null,null,7};
+        LinkedList<Integer> inputNodes = new LinkedList<>(Arrays.asList(nodes3));
         TreeNode root = createTree(inputNodes);
         //System.out.println("PreOrder:");
         //preOrderWithStack(root);
         //preOrderNonRecursive(root);
 //        System.out.println("MidOrder:");
 //        midOrderWithStack(root);
-        System.out.println("PostOrder:");
-        postOrderWithStack(root);
+        System.out.println("BFS:");
+        bfs(root);
     }
+
 
     /**
      * 入参数组是一个二叉树的前序遍历
@@ -179,9 +185,66 @@ public class ArrayImpl {
             if (current.rightSon != null)
                 temp.push(current.rightSon);
         }
-
         while (!stack.isEmpty()){
             System.out.println(stack.pop().value);
+        }
+    }
+
+    public void preOrderNon(TreeNode root){
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()){
+            TreeNode cur = stack.pop();
+            System.out.println(cur.value);
+            if (cur.rightSon != null)
+                stack.push(cur.rightSon);
+            if (cur.leftSon != null)
+                stack.push(cur.leftSon);
+        }
+    }
+    public void midOrderNon(TreeNode root){
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        TreeNode cur = root.leftSon;
+        while (cur != null || !stack.isEmpty()){
+            if (cur != null){
+                stack.push(cur);
+                cur = cur.leftSon;
+            }else if (!stack.isEmpty()){
+                TreeNode node = stack.pop();
+                System.out.println(node.value);
+                if (node.rightSon != null)
+                    cur = node.rightSon;
+            }
+        }
+    }
+
+    public void postOrderNon(TreeNode root){
+        Stack<TreeNode> temp = new Stack<>();
+        Stack<TreeNode> result = new Stack<>();
+        temp.push(root);
+        while (!temp.isEmpty()){
+            TreeNode node = temp.pop();
+            result.push(node);
+            if (node.leftSon != null)
+                temp.push(node.leftSon);
+            if (node.rightSon != null)
+                temp.push(node.rightSon);
+        }
+        while (!result.isEmpty()){
+            System.out.println(result.pop().value);
+        }
+    }
+    public void bfs(TreeNode root){
+        Deque<TreeNode> queue = new LinkedList<>();
+        queue.addFirst(root);
+        while (!queue.isEmpty()){
+            TreeNode node = queue.pollLast();
+            System.out.println(node.value);
+            if (node.leftSon != null)
+                queue.addFirst(node.leftSon);
+            if (node.rightSon != null)
+                queue.addFirst(node.rightSon);
         }
     }
 }
