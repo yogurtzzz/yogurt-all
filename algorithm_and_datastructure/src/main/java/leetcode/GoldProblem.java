@@ -46,18 +46,16 @@ public class GoldProblem {
 
 	/**
 	 * 内存复杂度优化
+	 * 只需要一个一维数组
+	 * 记得是从右往左进行替换（因为每一个格子的计算，涉及到上一行左侧的格子的数据）
 	 * **/
 	public int maxStrategyV3(int w,int[] p,int[] g,int n){
 		int[] result = new int[w + 1];
 		for (int i = 0; i < n; i++){
-			int[] temp = new int[w + 1];
-			for (int j = 1; j <= w; j++){
-				if (j < p[i])
-					temp[j] = result[j];
-				else
-					temp[j] = Math.max(result[j],g[i] + result[j - p[i]]);
+			for (int j = w; j >= 1; j--){
+				if (j >= p[i])
+					result[j] = Math.max(result[j],g[i] + result[j - p[i]]);
 			}
-			System.arraycopy(temp,0,result,0,w + 1);
 		}
 		return result[w];
 	}
