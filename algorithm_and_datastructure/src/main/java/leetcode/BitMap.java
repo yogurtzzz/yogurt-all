@@ -8,6 +8,7 @@ import java.util.Arrays;
 /**
  * 可以用byte数组实现
  * 也可以用long数组实现
+ * 注意移位时的  1 要写成 1L  ，否则会被当作int，移位超过32位会溢出
  * **/
 public class BitMap {
 	private long[] bitmap;
