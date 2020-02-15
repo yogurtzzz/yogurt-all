@@ -1,6 +1,9 @@
 package utils;
 
 
+import yogurt.data_structure.list.ArrayList;
+import yogurt.data_structure.list.List;
+
 public class ArrayUtil {
 
     static class IllegalOrderException extends RuntimeException{
@@ -60,6 +63,13 @@ public class ArrayUtil {
                     ascend = false;
             }
         }
+    }
+
+    public static <T> List<T> asList(T... arr){
+        List<T> list = new ArrayList<>();
+        for (T item : arr)
+            list.add(item);
+        return list;
     }
 
 }

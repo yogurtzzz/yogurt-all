@@ -102,9 +102,7 @@ public class LRUCache<K,V> {
 		cache.put("amber",41233);
 		Integer yogurt = cache.get("yogurt");
 		System.out.println(yogurt);
-
 		cache.put("Cicy",12123);
-
 		cache.printAll();
 	}
 }

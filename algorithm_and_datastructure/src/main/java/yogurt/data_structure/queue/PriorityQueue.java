@@ -23,6 +23,19 @@ public class PriorityQueue<T extends Comparable> {
 		downAdjust(0);
 		return t;
 	}
+	public boolean isEmpty(){
+		return heap.isEmpty();
+	}
+	public boolean contains(T e){
+		return heap.contains(e);
+	}
+	public T get(T e){
+		for (T item : heap){
+			if (item.equals(e))
+				return item;
+		}
+		return null;
+	}
 
 	private void upAdjust(int pos){
 		int cur = pos;
