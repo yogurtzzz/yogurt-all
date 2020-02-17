@@ -30,9 +30,18 @@ public class Maze extends JPanel {
 			while(true){
 				try{
 					boolean finish = maze.step();
-					if (finish)
+					if (finish){
+						UIManager.put("OptionPane.buttonFont",new FontUIResource(new Font("仿宋",Font.PLAIN,25)));
+						UIManager.put("OptionPane.messageFont",new FontUIResource(new Font("仿宋",Font.PLAIN,25)));
+						JOptionPane.showMessageDialog(
+								maze.parentFrame,
+								"Maze created successfully!",
+								"Congratulation",
+								JOptionPane.INFORMATION_MESSAGE);
 						break;
-					Thread.sleep(10);
+					}
+					int delay = maze.level == Level.EASY ? 30 : maze.level == Level.MEDIUM ? 10 : 2;
+					Thread.sleep(delay);
 				}catch (Exception e){
 					e.printStackTrace();
 					break;
@@ -194,9 +203,6 @@ public class Maze extends JPanel {
 	static final String COMMAND_STEP_GENERATE = "STEP_GEN";
 	static final String COMMAND_SHOW_WAY_OUT = "SHOW_WAY_OUT_GEN";
 	static final String COMMAND_START_GAME = "START_GAME";
-	static final int EASY_SCALE = 20;
-	static final int MID_SCALE = 40;
-	static final int HARD_SCALE = 60;
 
 	Frame parentFrame;
 	int scale;
@@ -267,7 +273,6 @@ public class Maze extends JPanel {
 		this.showRoute = false;
 		this.shortestRoute = null;
 		this.ball = new Ball(0,0,scale - 1,scale - 1,cellSize/2,this);
-		repaint();
 		//repaint后，需要重新获取焦点，以使得KeyListener生效
 		requestFocus();
 	}
@@ -287,9 +292,12 @@ public class Maze extends JPanel {
 		}
 		showRoute = !showRoute;
 		boolean showAnimation = true;
+		requestFocus();
 		if (showRoute){
-			if (!showAnimation)
+			clearParent();
+			if (!showAnimation) {
 				shortestRoute = AStarSolution();
+			}
 			else {
 				// 以动画形式展示路径
 				List<Point> temp = AStarSolution();
@@ -300,7 +308,7 @@ public class Maze extends JPanel {
 				new Thread(() -> {
 					try{
 						while (!queue.isEmpty()){
-							int delay = level == Level.EASY ? 80 : level == Level.MEDIUM ? 30 : 5;
+							int delay = level == Level.EASY ? 80 : level == Level.MEDIUM ? 30 : 20;
 							shortestRoute.add(queue.poll());
 							repaint();
 							Thread.sleep(delay);
@@ -313,6 +321,13 @@ public class Maze extends JPanel {
 			}
 		}else {
 			shortestRoute = null;
+		}
+	}
+
+	/** fix bug **/
+	private void clearParent(){
+		for (Point p : mazeList){
+			p.parent = null;
 		}
 	}
 
@@ -586,7 +601,7 @@ public class Maze extends JPanel {
 	private List<Point> AStarSolution(){
 		PriorityQueue<Weight> openList = new PriorityQueue<>();
 		List<Weight> closedList = new ArrayList<>();
-		openList.offer(new Weight(mazeMatrix[0][0],0,2 * scale - 2));
+		openList.offer(new Weight(mazeMatrix[ball.x][ball.y],0,2 * scale - 2));
 		Weight end = new Weight(mazeMatrix[scale - 1][scale - 1],0,0);
 		while (!openList.contains(end)){
 			Weight bestPoint = openList.poll();
