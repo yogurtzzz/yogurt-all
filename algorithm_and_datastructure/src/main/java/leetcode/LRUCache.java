@@ -2,107 +2,97 @@ package leetcode;
 
 import java.util.HashMap;
 
-public class LRUCache<K,V> {
-	static class Node<K,V>{
-		K key;
-		V value;
-		Node pre;
+/**
+ * leetcode 146题
+ * **/
+public class LRUCache{
+	static class Node{
+		int key;
+		int value;
+		Node prev;
 		Node next;
-		public Node(K key,V value){
-			this.key = key;
-			this.value = value;
-		}
 	}
 
-	private int size;
-	private HashMap<K,Node> map;
+	private HashMap<Integer,Node> map;
+
 	private Node head;
+
 	private Node tail;
 
-	public LRUCache(int size){
-		this.size = size;
-		this.map = new HashMap<>();
+	private int capacity;
+
+
+	public LRUCache(int capacity) {
+		map = new HashMap<>(capacity);
+		this.capacity = capacity;
 	}
 
-	public V get(K key){
-		Node<K,V> node = map.get(key);
-		if (node == null)
-			return null;
+	public int get(int key) {
+		Node node = map.get(key);
 		refreshNode(node);
-		return node.value;
+		return node == null ? -1 : node.value;
 	}
 
-	public void put(K key,V value){
-		Node<K,V> node = map.get(key);
-		if (node == null){
-			if (map.size() >= size){
-				Object oldKey = head.key;
-				removeNode(head);
-				map.remove(oldKey);
-			}
-			node = new Node<>(key,value);
-			map.put(key,node);
-			addNode(node);
-		}else {
-			node.value = value;
-			refreshNode(node);
+	public void put(int key, int value) {
+		Node oldNode = map.get(key);
+		if (oldNode != null){
+			oldNode.value = value;
+			refreshNode(oldNode);
+			return ;
 		}
-	}
 
-	public void printAll(){
-		Node c = head;
-		while (c != null){
-			System.out.println(c.key + ":" + c.value);
-			c = c.next;
+		if (map.size() == capacity){
+			int oldestKey = head.key;
+			map.remove(oldestKey);
+			Node newHead = head.next;
+			head.next = null;
+			if (newHead != null){
+				newHead.prev = null;
+			}
+			head = newHead;
+			if (head == null){
+				tail = null;
+			}
+		}
+		Node newNode = new Node();
+		newNode.value = value;
+		newNode.key = key;
+		map.put(key,newNode);
+		if (head == null){
+			head = tail = newNode;
+		}else {
+			tail.next = newNode;
+			newNode.prev = tail;
+			tail = newNode;
 		}
 	}
 
 	private void refreshNode(Node node){
-		if (tail == node)
+		if (node == null){
 			return;
-		removeNode(node);
-		addNode(node);
-	}
-
-	private void addNode(Node node){
-		if (tail == null){
-			head = node;
-		}else {
+		}
+		Node prev = node.prev;
+		Node next = node.next;
+		if (prev == null && next == null)
+			return;
+		if (prev == null){
+			/** 该Node是head **/
+			head = node.next;
+			head.prev = null;
+			node.next = null;
 			tail.next = node;
-			node.pre = tail;
-		}
-		tail = node;
-	}
-	private void removeNode(Node node){
-		if (head == tail && tail == node)
-			head = tail = null;
-		else if (tail == node){
-			Node t = tail;
-			tail = tail.pre;
-			tail.next = null;
-			t.pre = null;
-		}else if (head == node){
-			Node t = head;
-			head = head.next;
-			head.pre = null;
-			t.next = null;
+			node.prev = tail;
+			tail = node;
+		}else if (next == null){
+			/** 该Node是tail **/
+
 		}else {
-			Node pre = node.pre;
-			Node next = node.next;
-			node.pre = node.next = null;
-			pre.next = next;
-			next.pre = pre;
+			prev.next = next;
+			next.prev = prev;
+			tail.next = node;
+			node.prev = tail;
+			node.next = null;
+			tail = node;
 		}
-	}
-
-
-	public static void main(String[] args) {
-		LRUCache<String,Integer> cache = new LRUCache<>(3);
-		cache.put("yogurt",234);
-		cache.put("amber",41233);
-		Integer yogurt = cache.get("yogurt");
-		System.out.println(yogurt);
-		cache.put("Cicy",12123);
-		cache.printAll();
 	}
 }
