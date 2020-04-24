@@ -14,6 +14,7 @@ import java.util.concurrent.locks.LockSupport;
  * 一个线程打印ABCD字母
  * 一个线程打印1234数字
  * 要求先打印字母
+ * A1B2C3D4
  *
  * 用LockSupport的park和unpark
  **/
