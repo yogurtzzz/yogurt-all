@@ -23,7 +23,7 @@
     </modules>
     <properties>
         <java_version>1.8</java_version>
-        <spring_version>5.0.10.RELEASE</spring_version>
+        <spring_version>5.2.7.RELEASE</spring_version>
         <junit_version>4.12</junit_version>
         <maven_version>3.8.0</maven_version>
     </properties>
